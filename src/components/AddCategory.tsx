@@ -77,7 +77,12 @@ export const AddCategory = (props:Props) => {
       month : date.getMonth() + 1 ,
       year : date.getFullYear(),
     }
-    const formatDate = parts.year + "-" + parts.month + "-" + parts.date;
+    let month = "";
+    if(parts.month<2){
+       month = "0" + parts.month;
+        
+    }
+    const formatDate = parts.year + "-" + month + "-" + parts.date;
     const currentMonth = parts.month;
     const dateDetails = [formatDate,currentMonth];
     return dateDetails;

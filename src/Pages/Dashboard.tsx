@@ -33,21 +33,20 @@ export const Dashboard = () => {
       value: string;
     };
   }
-  // interface Exp {
-  //   expenseName : string,
-  //   category :string,
-  //   expenseDesc : string,
-  //   expenseAmount :number,
-  //   unit :string,
-  //   catId :string;
-  //   currentDate:string;
-  //currentMonth : Number,
-  // }
+
+  // interface parts {
+  //   date : number;
+  //   month : number || string;
+  //   year : number;
+  //   }
+  
 
   const [TodayExpense, setTodayExpense] = useState(0);
   const [TotalBudget, setTotalBudget] = useState(0);
   const [TotalExpense, setTotalExpense] = useState(0);
   const [DateValues, setDate] = useState({ Startdate: "", Enddate: "" });
+  const [renderState,setRenderState] = useState(false);
+  
   // const [Enddate,setEndDate] = useState("");
 
   console.log(DateValues.Startdate);
@@ -78,7 +77,14 @@ export const Dashboard = () => {
       month: date.getMonth() + 1,
       year: date.getFullYear(),
     };
-    const formatDate = parts.year + "-" + parts.month + "-" + parts.date;
+    let month = "";
+    if(parts.month<2){
+       month = "0" + parts.month;
+     
+      
+    }
+    console.log(parts.month);
+    const formatDate = parts.year + "-" + month + "-" + parts.date;
     const currentMonth = parts.month;
     const dateDetails = [formatDate, currentMonth];
     return dateDetails;
@@ -109,13 +115,8 @@ export const Dashboard = () => {
       +0
     );
 
-    // const sum = todayExpArr.reduce(myFunction);
-
-    // function myFunction(total:number, value:number) {
-    //   return 0 + value;
-    // }
     setTodayExpense(todayExpense);
-  }, [navigate]);
+  }, [TodayExpense]);
 
   useEffect(() => {
     // Fetching ALL categories budget
@@ -127,6 +128,8 @@ export const Dashboard = () => {
     //  const totalbudgetArr = [];
 
     if (DateValues.Startdate && DateValues.Enddate) {
+      console.log("i entered",DateValues.Startdate,DateValues.Enddate);
+      console.log(allBudget);
       for (let i = 0; i < allBudget.length; i++) {
         if (
           allBudget[i].currentDate >= DateValues.Startdate &&
@@ -142,7 +145,7 @@ export const Dashboard = () => {
         }
       }
     }
-    // console.log(Budget);
+    console.log(Budget);
     setTotalBudget(Budget);
     console.log("I rendered");
   }, [DateValues]);
@@ -175,26 +178,9 @@ export const Dashboard = () => {
     // console.log(Budget);
     setTotalExpense(totalExpense);
     console.log("I rendered total Expense");
-  }, [DateValues]);
+  }, [DateValues,TodayExpense]);
 
-  // useEffect(() => {
-
-  // const allBudget = JSON.parse(localStorage.getItem("categories") as string) || [];
-
-  // let Budget = 0 ;
-
-  // if(DateValues.Startdate && DateValues.Enddate){
-  //   for(let i=0; i<allBudget.length ; i++){
-  //     if(allBudget[i].currentDate >= DateValues.Startdate && allBudget[i].currentDate <= DateValues.Enddate ){
-  //      Budget += (+allBudget[i].catBudget);
-  //     }
-  //  }
-  // }
-
-  // setTotalBudget(Budget);
-  // console.log("I rendered according to date");
-  // },[DateValues]);
-
+  
   // show add expense form
 
   const getData = () => {
@@ -209,9 +195,39 @@ export const Dashboard = () => {
 
   const getShowData = () => {
     document.getElementById("formPopup")!.classList.add("hidden");
+    const allExpense =
+      JSON.parse(localStorage.getItem("expense") as string) || [];
+
+    const todayExpArr = [];
+    for (let i = 0; i < allExpense.length; i++) {
+      if (allExpense[i].currentDate === currentDate) {
+        todayExpArr.push(allExpense[i].expenseAmount);
+      }
+    }
+    console.log(todayExpArr);
+    const todayExpense = todayExpArr.reduce(
+      (sum: number, item: number) => +sum + +item,
+      +0
+    );
+
+    setTodayExpense(todayExpense);
   };
   const getCategoryData = () => {
     document.getElementById("categoryPopup")!.classList.add("hidden");
+    const allBudget =
+      JSON.parse(localStorage.getItem("categories") as string) || [];
+
+    // Find the desired expense of particular date
+    let Budget = 0;
+    //  const totalbudgetArr = [];
+      for (let i = 0; i < allBudget.length; i++) {
+        if (allBudget[i].currentMonth === currentMonth) {
+          Budget += +allBudget[i].catBudget;
+        }
+      }
+    
+    // console.log(Budget);
+    setTotalBudget(Budget);
   };
 
   //
@@ -249,7 +265,8 @@ export const Dashboard = () => {
     setDate({ ...DateValues, [name]: value });
     console.log(DateValues.Startdate);
     console.log(DateValues.Enddate);
-
+    console.log(currentDate);
+   
     // setTotalBudget(Budget);
     // console.log("I rendered according to date");
   };

@@ -101,7 +101,13 @@ export const Popup = (props:Props) => {
       month : date.getMonth() + 1 ,
       year : date.getFullYear(),
     }
-    const formatDate = parts.year + "-" + parts.month + "-" + parts.date;
+    let month = "";
+    if(parts.month<2){
+       month = "0" + parts.month;
+     
+      
+    }
+    const formatDate = parts.year + "-" + month + "-" + parts.date;
     const currentMonth = parts.month;
     const dateDetails = [formatDate,currentMonth];
     return dateDetails;
@@ -115,8 +121,6 @@ export const Popup = (props:Props) => {
 
   const handleExpense = (e: React.FormEvent) => {
      e.preventDefault();
-   
-
     const errors = validate(expenseValues);
     console.log(errors.amount);
     setExpenseErrors(errors);
@@ -136,7 +140,6 @@ export const Popup = (props:Props) => {
      const currentDate = dateDetails[0];
      const currentMonth = dateDetails[1];
      dispatch(addExpActions.addExpense({...expenseValues,catId,currentDate,currentMonth}));
-
       resetForm();
       props.getShowData();
     }

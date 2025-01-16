@@ -84,9 +84,11 @@ const [barState, setBarState] = useState<{
         return acc;
       }, {});
 
-      const todayCategories = Object.keys(todayExpenseMap);
+    const todayCategories = Object.keys(todayExpenseMap);
     const todayAmounts = Object.values(todayExpenseMap);
     
+    console.log(todayCategories);
+    console.log(todayAmounts);
 
     
     setChartOptions({
