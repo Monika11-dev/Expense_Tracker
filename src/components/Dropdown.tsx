@@ -4,7 +4,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Dropdown: React.FC = () => {
+export const Dropdown = () => {
 
 
   const navigate = useNavigate();
@@ -48,11 +48,11 @@ export const Dropdown: React.FC = () => {
         >
           <ul>
             <li className="hover:bg-white hover:text-darkGrey px-4 py-1">
-              <Link to="/Profile">Profile</Link>
+              <Link to="/Settings">Profile</Link>
             </li>
-            <li className="hover:bg-white hover:text-darkGrey px-4 py-1">
-              <Link to="/Settings ">Settings</Link>
-            </li>
+            {/* <li className="hover:bg-white hover:text-darkGrey px-4 py-1">
+              <Link to="/Settings ">Settings</Link> */}
+            {/* </li> */}
             <li className="hover:bg-white hover:text-darkGrey px-4 py-1">
               <button onClick={handleLogout}>Logout</button>
             </li>

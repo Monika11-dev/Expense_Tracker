@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineHeatMap } from "react-icons/ai";
 import { navItems, reportItems, maintainItems } from "../../Database/Navlinks";
-export const Sidebar : React.FC = () => {
+export const Sidebar = () => {
 
   type T = {
     key:number,

@@ -1,32 +1,34 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Mainheading } from '../components/Mainheading';
+import { Datatable } from '../components/Datatable';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const Expense : React.FC = () => {
+export const Budget = () => {
 
   const navigate = useNavigate();
-
-  // navigation access
-  
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser") as string);
 
     if(currentUser){
-      navigate("/Expense");
+      navigate("/Budget");
     }
     else {
       navigate("/Login");
     }
    
   }, [navigate]);
-
-
   return (
-    <div>
-      <h2> Expense <Link to="/" className="underline">Go to Dashboard</Link></h2>
+    <>
+    <div className='container mx-auto px-4'>
+      <Mainheading mainheading="Manage Your Budget in few steps"/>
       
+      <div className=''>
+      <Datatable/>
+
+      </div>
     </div>
     
+    </>
   )
 }

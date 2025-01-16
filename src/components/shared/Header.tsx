@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown } from "../Dropdown";
 
 
-export const Header: React.FC = () => {
+export const Header = () => {
   return (
     <>
     <div>

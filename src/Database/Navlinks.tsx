@@ -58,13 +58,13 @@ export const navItems : T[]= [
     {
       key: 1,
       label: 'Category List',
-      path: '/category',
+      path: '/CategoryList',
       icon: <FaListUl fontSize={20}/>,
     },
     {
       key: 2,
       label: 'Settings',
-      path: '/settings',
+      path: '/Settings',
       icon: <CiSettings fontSize={20}/>,
     },
    

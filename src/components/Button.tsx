@@ -6,7 +6,7 @@ type Props = {
     getData() : void;
 }
 
-export const Button : React.FC<Props> = (props) => {
+export const Button = (props:Props) => {
 
   // calling getData to display add expense form in parent component
 
@@ -15,6 +15,10 @@ export const Button : React.FC<Props> = (props) => {
       if(props.text === 'Add Expense'){
         props.getData();
       }
+      // else if(props.text === 'Add Category')
+      // {
+      //   props.getCatData();
+      // }
   }
 
   return (

@@ -4,7 +4,7 @@ type Props = {
     heading :string,
   }
 
-export const SubHead : React.FC<Props> = (props) => {
+export const SubHead= (props:Props) => {
 
   return (
        <>

@@ -6,11 +6,26 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { userActions } from "../Store/userAuth-slice";
 import { useNavigate } from "react-router-dom";
-
-export const Register: React.FC = () => {
+// import { useEffect } from "react";
+import { useEffect } from "react";
+export const Register = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // navigation access
+  
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser") as string);
+
+    if(currentUser){
+      navigate("/");
+    }
+    else {
+      navigate("/Signup");
+    }
+   
+  }, [navigate]);
 
   interface Register {
        target : {
@@ -24,33 +39,101 @@ export const Register: React.FC = () => {
     email:string,
     password:string,
   }
-
+  const errors = {     
+    username : '',
+    email : '',
+    password:'',     
+  };
   const [formValues, setFormValues] = useState({
     username: "",
     email: "",
     password: "",
   });
 
-  // updating formvalues when user inputs
+  const [registerErrors, setRegisterErrors] = useState(errors);
+  console.log(registerErrors.username);
+  
+  const [isSubmit,setIsSubmit] = useState(false);
   
   const handleChange = (e:Register) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    // console.log("values set");
+   
   };
 
   // handling form submission
 
-  const handleSubmit = () => {
+  const handleSubmit = (e:{preventDefault():void}) => {
+
+       e.preventDefault();
+
+       const errors = validate(formValues);
+
+       setRegisterErrors(errors);
+
+       setIsSubmit(true);
+
+        if(Object.values(errors).length === 0 ){
+
+          setIsSubmit(true);
+       // alert("yippee");
        dispatch(userActions.registerUser({...formValues} as stringObject));
        const user = JSON.parse(localStorage.getItem("currentUser") as string);
        console.log(user);
        if(user){
          navigate("/");
          return;
+       } 
+        navigate("/Signup");
+        
        }
-       navigate("/Signup");
+       else if(Object.values(errors).length !== 0){
+        setIsSubmit(false);
+            
+      }
   }
+
+  // useEffect(()=>{
+  //   alert(registerErrors.username);
+  // },[registerErrors]);
+
+  
+
+  const validate = (values:stringObject) => {
+    
+    const errors: any = {};
+
+    const regexUsername = /^[A-Za-z\s]+$/;
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regexPassword = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
+
+    if (values.username==='') {
+      errors.username = "Username is required!";
+     
+    }
+    else if (!regexUsername.test(values.username)) {
+      errors.username = "Username can only contain letters and spaces.";
+      
+    }
+    if (values.email==='') {
+      errors.email = "Email is required!";
+     
+    }
+    else if (!regexEmail.test(values.email)) {
+      errors.email = "Invalid email format.";
+     
+    }
+    if (values.password==='') {
+      errors.password = "Password is required!";
+      
+    }
+    else if (!regexPassword.test(values.password)) {
+      errors.password =
+        "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character.";
+       
+      }
+    return errors;
+  };
 
   return (
     <>
@@ -68,10 +151,11 @@ export const Register: React.FC = () => {
                   name="username"
                   placeholder="Name"
                   className="form-layout"
-                  required
+                  
                   value={formValues.username}
                   onChange={handleChange}
                 />
+                {registerErrors && (<div><span className="text-red text-sm ml-1">{registerErrors.username}</span></div>)}
                 <input
                   type="email"
                   name="email"
@@ -79,9 +163,9 @@ export const Register: React.FC = () => {
                   className="form-layout"
                   value={formValues.email}
                   onChange={handleChange}
-                  required
+                  
                 />
-               
+                {registerErrors && (<div><span className="text-red text-sm ml-1">{registerErrors.email}</span></div>)}
                 <input
                   type="password"
                   name="password"
@@ -89,8 +173,9 @@ export const Register: React.FC = () => {
                   value={formValues.password}
                   className="form-layout"
                   onChange={handleChange}
-                  required
+                  
                 />
+                 {registerErrors && (<div className="text-red text-sm ml-1"><span>{registerErrors.password}</span></div>)}
                 <button
                   type="submit"
                   className="w-full bg-red text-white p-2 mt-4"

@@ -6,6 +6,13 @@ interface stringObject {
     password:string,
   }
 
+  interface UserProfile {
+    name: string;
+    email: string;
+    mobile: string;
+    location: string;
+  }
+
 const userAuthSlice = createSlice({
   name: "userAuth",
 
@@ -39,6 +46,7 @@ const userAuthSlice = createSlice({
       existingUsers.push(newUser);
       localStorage.setItem("users", JSON.stringify(existingUsers));
       localStorage.setItem("currentUser",JSON.stringify(newUser.username));
+      localStorage.setItem("currentUserEmail",JSON.stringify(newUser.email));
       state.username = newUser.username;
       state.email = newUser.email;
       alert("Account Created !");
@@ -58,6 +66,7 @@ const userAuthSlice = createSlice({
             state.username = user.username;
             state.email = user.email;
             localStorage.setItem("currentUser",JSON.stringify(user.username));
+            localStorage.setItem("currentUserEmail",JSON.stringify(user.email));
             alert('Redirecting to the home page.');
             
         }
@@ -71,8 +80,32 @@ const userAuthSlice = createSlice({
         const dataToString = JSON.stringify(userData);
         const dataObject = JSON.parse(dataToString);
         localStorage.setItem("currentUser",JSON.stringify(dataObject.name));
+        localStorage.setItem("currentUserEmail",JSON.stringify(dataObject.email));
         state.username = dataObject.name;
         state.email = dataObject.email;
+    },
+    updateProfile(state,action){
+      const userProfile = action.payload;
+      // alert(userProfile);
+      const existingUserProfile = JSON.parse(localStorage.getItem("userProfile") as string) || [];
+      const emailExists = existingUserProfile.find(
+        (user:stringObject) => user.email === userProfile.email
+      );
+      if(emailExists){
+        const updatedProfile = existingUserProfile.map((item:UserProfile) =>
+          item.email === userProfile.email
+            ? { ...item, name: userProfile.name , email : userProfile.email, mobile :userProfile.mobile,location : userProfile.location }
+            : item
+        );
+        localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
+          return;
+      }
+      existingUserProfile.push(userProfile);
+      localStorage.setItem("userProfile", JSON.stringify(existingUserProfile));
+
+      
+
+    
     }
   },
 });
